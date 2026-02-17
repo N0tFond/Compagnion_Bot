@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { InteractionType, EmbedBuilder } = require('discord.js');
+const { InteractionType, EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = (client) => {
     const eventsPath = path.join(__dirname, '..', 'events');
@@ -27,11 +27,19 @@ module.exports = (client) => {
                     await command.execute(interaction);
                 } catch (error) {
                     console.error('Erreur lors de l\'exécution de la commande:', error);
-                    if (!interaction.replied && !interaction.deferred) {
-                        await interaction.reply({
-                            content: '❌ Une erreur est survenue lors de l\'exécution de cette commande !',
-                            ephemeral: true
-                        });
+                    try {
+                        if (interaction.deferred && !interaction.replied) {
+                            await interaction.editReply({
+                                content: '❌ Une erreur est survenue lors de l\'exécution de cette commande !'
+                            });
+                        } else if (!interaction.replied && !interaction.deferred) {
+                            await interaction.reply({
+                                content: '❌ Une erreur est survenue lors de l\'exécution de cette commande !',
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+                    } catch (replyError) {
+                        console.error('Impossible de répondre à l\'interaction:', replyError.message);
                     }
                 }
             } else if (interaction.type === InteractionType.ModalSubmit) {
@@ -50,7 +58,7 @@ module.exports = (client) => {
                         if (!title.trim() || !description.trim()) {
                             await interaction.reply({
                                 content: '❌ Les champs ne peuvent pas être vides.',
-                                ephemeral: true
+                                flags: MessageFlags.Ephemeral
                             });
                             return;
                         }
@@ -87,28 +95,26 @@ module.exports = (client) => {
                         if (!interaction.replied) {
                             await interaction.reply({
                                 content: '✅ Votre suggestion a été envoyée avec succès !',
-                                ephemeral: true
+                                flags: MessageFlags.Ephemeral
                             });
                         }
                     }
                 } catch (error) {
                     console.error('Erreur dans le traitement du modal:', error);
-                    if (!interaction.replied) {
-                        await interaction.reply({
-                            content: '❌ Une erreur est survenue lors du traitement de votre suggestion.',
-                            ephemeral: true
-                        });
+                    try {
+                        if (!interaction.replied && !interaction.deferred) {
+                            await interaction.reply({
+                                content: '❌ Une erreur est survenue lors du traitement de votre suggestion.',
+                                flags: MessageFlags.Ephemeral
+                            });
+                        }
+                    } catch (replyError) {
+                        console.error('Impossible de répondre à l\'interaction:', replyError.message);
                     }
                 }
             }
         } catch (error) {
             console.error('Erreur dans le gestionnaire d\'interactions:', error);
-            if (!interaction.replied && !interaction.deferred) {
-                await interaction.reply({
-                    content: '❌ Une erreur inattendue est survenue.',
-                    ephemeral: true
-                });
-            }
         }
     });
 };

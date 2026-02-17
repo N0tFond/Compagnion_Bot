@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,6 +12,9 @@ module.exports = {
 
     async execute(interaction) {
         try {
+            // Différer la réponse pour éviter le timeout
+            await interaction.deferReply();
+
             // Récupère l'utilisateur mentionné ou l'utilisateur qui a exécuté la commande
             const user = interaction.options.getUser('utilisateur') || interaction.user;
             console.log(`Recherche d'activité pour l'utilisateur: ${user.username} (${user.id})`);
@@ -23,9 +26,8 @@ module.exports = {
 
             if (!member) {
                 console.log(`Membre non trouvé pour l'utilisateur: ${user.username}`);
-                return interaction.reply({
-                    content: `Je n'ai pas pu trouver ${user.username} sur ce serveur.`,
-                    ephemeral: true
+                return await interaction.editReply({
+                    content: `Je n'ai pas pu trouver ${user.username} sur ce serveur.`
                 });
             }
 
@@ -34,14 +36,13 @@ module.exports = {
 
             if (!activities || activities.length === 0) {
                 console.log(`Pas d'activités pour ${user.username}`);
-                return interaction.reply({
-                    content: `${user.username} n'a aucune activité en cours.`,
-                    ephemeral: false
+                return await interaction.editReply({
+                    content: `${user.username} n'a aucune activité en cours.`
                 });
             }
 
             // Ajoute la couleur verte pour l'embed
-            const embedColor = process.env.COLOR_GREEN
+            const embedColor = process.env.COLOR_GREEN;
 
             // Crée un embed pour afficher les activités
             const embed = new EmbedBuilder()
@@ -103,17 +104,26 @@ module.exports = {
             });
 
             console.log(`Réponse envoyée avec ${activities.length} activité(s)`);
-            return interaction.reply({
-                embeds: [embed],
-                ephemeral: false
+            return await interaction.editReply({
+                embeds: [embed]
             });
 
         } catch (error) {
             console.error(`Erreur générale dans la commande activité: ${error}`);
-            return interaction.reply({
-                content: `Une erreur est survenue lors de la récupération des activités: ${error.message}`,
-                ephemeral: true
-            });
+            try {
+                if (interaction.deferred && !interaction.replied) {
+                    return await interaction.editReply({
+                        content: `Une erreur est survenue lors de la récupération des activités.`
+                    });
+                } else if (!interaction.replied && !interaction.deferred) {
+                    return await interaction.reply({
+                        content: `Une erreur est survenue lors de la récupération des activités.`,
+                        flags: MessageFlags.Ephemeral
+                    });
+                }
+            } catch (replyError) {
+                console.error(`Impossible de répondre à l'interaction: ${replyError}`);
+            }
         }
     }
 }

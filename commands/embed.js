@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,7 +33,7 @@ module.exports = {
         if (!interaction.member.roles.cache.has(staffRole)) {
             return interaction.reply({
                 content: `${process.env.CROSS} ⟩ Vous n'avez pas la permission d'utiliser cette commande.`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -47,7 +47,7 @@ module.exports = {
         if (!channel.isTextBased()) {
             return interaction.reply({
                 content: `${process.env.CROSS} ⟩ Le salon sélectionné doit être un salon textuel.`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
 
@@ -63,7 +63,7 @@ module.exports = {
         await channel.send({ embeds: [embed] });
         return interaction.reply({
             content: `${process.env.CHECK} ⟩ L'embed a été envoyé avec succès dans ${channel}`,
-            ephemeral: true
+            flags: MessageFlags.Ephemeral
         });
     }
 };

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     // Définition de la commande slash
@@ -13,7 +13,7 @@ module.exports = {
             if (!interaction.guild.members.me.permissions.has('ManageRoles')) {
                 return await interaction.reply({
                     content: "❌ Le bot n'a pas la permission de gérer les rôles. Veuillez vérifier les permissions.",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -30,14 +30,14 @@ module.exports = {
             if (!role) {
                 return await interaction.reply({
                     content: "⚠️ Le rôle de vérification n'a pas été trouvé. Veuillez contacter un administrateur.",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
             if (!unverifiedRole) {
                 console.log(`Rôle non vérifié avec l'ID ${unverifiedRoleId} introuvable.`);
                 return await interaction.reply({
                     content: "⚠️ Le rôle non vérifié n'a pas été trouvé. Veuillez contacter un administrateur.",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -45,7 +45,7 @@ module.exports = {
             if (unverifiedRole.position > interaction.guild.members.me.roles.highest.position) {
                 return await interaction.reply({
                     content: "❌ Le bot ne peut pas supprimer le rôle non vérifié car il est plus haut dans la hiérarchie.",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -53,7 +53,7 @@ module.exports = {
             if (interaction.member.roles.cache.has(roleId)) {
                 return await interaction.reply({
                     content: "✅ Vous êtes déjà vérifié(e) sur ce serveur!",
-                    ephemeral: true
+                    flags: MessageFlags.Ephemeral
                 });
             }
 
@@ -70,7 +70,7 @@ module.exports = {
                     console.error('Erreur lors de la suppression du rôle non vérifié:', error);
                     await interaction.reply({
                         content: "❌ Une erreur s'est produite lors de la suppression du rôle non vérifié.",
-                        ephemeral: true
+                        flags: MessageFlags.Ephemeral
                     });
                 }
             } else {
@@ -80,7 +80,7 @@ module.exports = {
             // Répondre à l'utilisateur
             await interaction.reply({
                 content: `✅ Félicitations! Vous avez été vérifié(e) et avez reçu le rôle **${role.name}**!`,
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
 
             // Log dans un canal de logs
@@ -94,7 +94,7 @@ module.exports = {
             console.error('Erreur lors de la vérification:', error);
             await interaction.reply({
                 content: "❌ Une erreur s'est produite lors de la vérification. Veuillez réessayer plus tard ou contacter un administrateur.",
-                ephemeral: true
+                flags: MessageFlags.Ephemeral
             });
         }
     },
