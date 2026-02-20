@@ -21,7 +21,6 @@ readyHandler(client);
 commandsHandler(client);
 interactionHandler(client);
 
-// Démarrer le serveur keep-alive
 startServer();
 
 client.login(process.env.TOKEN);
