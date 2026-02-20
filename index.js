@@ -1,21 +1,21 @@
-const Discord = require("discord.js");
+const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const readyHandler = require("./module/readyHandler.js");
 const commandsHandler = require("./module/commandsHandler.js");
 const interactionHandler = require("./module/InteractionHandler.js");
 const { startServer } = require("./keepAlive.js");
 require("dotenv").config();
 
-const client = new Discord.Client({
+const client = new Client({
     intents: [
-        Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.MessageContent,
-        Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildPresences
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildPresences
     ],
 });
 
-client.commands = new Discord.Collection();
+client.commands = new Collection();
 
 readyHandler(client);
 commandsHandler(client);
