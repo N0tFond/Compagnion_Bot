@@ -21,7 +21,7 @@ module.exports = {
             const joinDate = moment(targetMember.joinedAt).format('DD MMMM YYYY');
             const activities = targetMember.presence?.activities
                 ? targetMember.presence.activities.map((activity, index) => {
-                    if (activity.type === 'LISTENING' && activity.name === 'Spotify') {
+                    if (activity.type === 'LISTENING' && (activity.name === 'Spotify' || activity.name === 'Apple Music')) {
                         return `**${index + 1}. Écoute Spotify**\n> Artiste : ${activity.state}\n> Musique : ${activity.details} \n> Album : ${activity.assets?.largeText || 'Inconnu'}`;
                     }
                     let details = `**${index + 1}. ${activity.name}**`;

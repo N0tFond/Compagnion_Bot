@@ -45,19 +45,30 @@ module.exports = {
                 });
             }
 
+            // Tentative d'envoi d'un message privé à l'utilisateur
+            let dmSent = false;
             try {
                 await user.send(`⟩ Vous avez été banni du serveur **${interaction.guild.name}** pour la raison suivante : \`${reason}\``);
+                dmSent = true;
             } catch (error) {
                 if (error.code === 50007) {
-                    return;
+                    console.log(`⚠️ ⟩ Impossible d'envoyer un message privé à ${user.tag} (DM fermés)`);
                 } else {
                     console.error('⚠️ ⟩ Erreur lors de l\'envoi du message privé:', error);
                 }
             }
 
+            // Bannir l'utilisateur
             try {
                 await member.ban({ reason: reason });
-                await interaction.editReply({ content: `${process.env.CHECK} ⟩ ${user.tag} a été banni avec succès pour la raison : *${reason}* !` });
+
+                // Message de confirmation avec indication si le DM a été envoyé
+                let confirmMessage = `${process.env.CHECK} ⟩ ${user.tag} a été banni avec succès pour la raison : *${reason}* !`;
+                if (!dmSent) {
+                    confirmMessage += `\n⚠️ ⟩ L'utilisateur n'a pas pu être notifié par message privé.`;
+                }
+
+                await interaction.editReply({ content: confirmMessage });
                 console.log(`🚓 ⟩ ${user.tag} a été banni du serveur ${interaction.guild.name} par ${interaction.user.username} \n→ raison : ${reason}`);
             } catch (error) {
                 console.error('⚠️ ⟩ Erreur lors du bannissement de l\'utilisateur:', error);
