@@ -1,3 +1,5 @@
+// main.js
+
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const readyHandler = require("./module/readyHandler.js");
 const commandsHandler = require("./module/commandsHandler.js");
