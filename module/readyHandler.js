@@ -2,8 +2,8 @@ const { PresenceUpdateStatus, ActivityType } = require('discord.js');
 
 const ReadyHandler = (client) => {
     client.once('ready', () => {
-        // Définir la bio du bot
-        client.user.setAbout('🤖 Companion Bot - Utility & Services\n📚 /help pour les commandes\n🔗 Multi-serveurs');
+        // Note: La bio du bot doit être définie manuellement dans les paramètres du profil Discord
+        // Car Discord.js n'a pas d'API pour modifier la bio de manière programmatique
 
         // Liste des activités en rotation
         const activities = [
@@ -32,8 +32,8 @@ const ReadyHandler = (client) => {
         }, 30000);
 
         console.log(`⟩ Connecté en tant que ${client.user.username}`);
-        console.log(`⟩ Bio du bot définie avec succès`);
         console.log(`⟩ ${activities.length} activités en rotation chargées`);
+        console.log(`⟩ 💡 N'oubliez pas de configurer la bio du bot dans les paramètres Discord`);
     });
 };
 

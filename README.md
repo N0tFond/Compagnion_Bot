@@ -20,7 +20,7 @@ Un bot Discord polyvalent offrant diverses fonctionnalités de modération et d'
   - `/about`: Afficher à propos du bot avec liens utiles _(Nouveau)_
 - 🎭 **Profil du Bot**
   - 🎬 **Présence dynamique** - Activités en rotation toutes les 30 secondes
-  - 📝 **Bio personnalisée** - Description affichée sur le profil Discord
+  - 📝 **Bio personnalisée** - Configuration manuelle sur Discord
   - 🔗 **Boutons interactifs** - Accès direct à GitHub, support, documentation, etc.
 
 ## 🚀 Installation
@@ -108,7 +108,17 @@ L'embed contient:
   - "/help for commands"
   - "new features 🚀"
 
-- ✅ **Bio du Bot** - Une description personnalisée affichée sur le profil Discord du bot
+- ✅ **Bio du Bot** - Configuration manuelle du profil Discord
+  - Pour ajouter une bio au bot:
+    1. Accédez à [Discord Developer Portal](https://discord.com/developers/applications)
+    2. Sélectionnez votre application
+    3. Allez à **General Information** → **Description** ou **About me**
+    4. Ajoutez votre bio personnalisée:
+       ```
+       🤖 Companion Bot - Utility & Services
+       📚 /help pour les commandes
+       🔗 Multi-serveurs
+       ```
 
 ### Mises à Jour Techniques
 
