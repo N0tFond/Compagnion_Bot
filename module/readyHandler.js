@@ -11,7 +11,7 @@ const ReadyHandler = (client) => {
             { name: 'with Discord.js ⚙️', type: ActivityType.Playing },
             { name: 'the servers 👀', type: ActivityType.Watching },
             { name: '/help for commands', type: ActivityType.Playing },
-            { name: 'new features 🚀', type: ActivityType.Developing },
+            { name: 'new features 🚀', type: ActivityType.Playing },
         ];
 
         let activityIndex = 0;
